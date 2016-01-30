@@ -62,7 +62,7 @@ module.exports = function (app, passport) {
 			var sentJSON = {
 				IP: headers['x-forwarded-for'],
 				Language: headers['accept-language'].match(/^\D\D-\D\D/)[0],
-				OS: headers['user-agent'].match(/\(.*\)/)[0]
+				OS: headers['user-agent'].match(/\(.*\)/)[0].match(/[^\(].*[^\)]/)[0]
 			};
 			res.json(sentJSON);
 	});
