@@ -35,12 +35,7 @@ module.exports = function (app, passport) {
 		.get(isLoggedIn, function (req, res) {
 			res.sendFile(path + '/public/profile.html');
 		});
-
-	app.route('/api/:id')
-		.get(isLoggedIn, function (req, res) {
-			res.json(req.user.github);
-		});
-
+		
 	app.route('/auth/github')
 		.get(passport.authenticate('github'));
 
@@ -49,9 +44,26 @@ module.exports = function (app, passport) {
 			successRedirect: '/',
 			failureRedirect: '/login'
 		}));
+		
+	/*app.route('/api/:id')
+		.get(isLoggedIn, function (req, res) {
+			res.json(req.user.github);
+		});
 
 	app.route('/api/:id/clicks')
 		.get(isLoggedIn, clickHandler.getClicks)
 		.post(isLoggedIn, clickHandler.addClick)
 		.delete(isLoggedIn, clickHandler.resetClicks);
+	*/
+	
+	app.route('/api/whoami')
+		.get( function (req, res) {
+			var headers = req.headers;
+			var sentJSON = {
+				IP: headers['x-forwarded-for'],
+				Language: headers['accept-language'].match(/^\D\D-\D\D/)[0],
+				OS: headers['user-agent'].match(/\(.*\)/)[0]
+			};
+			res.json(sentJSON);
+	});
 };
